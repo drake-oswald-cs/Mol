@@ -1,0 +1,18 @@
+#The purpose of this program is to define functions
+ that are useful for ease of programming, syntatic
+ sugar. I plan on modifying and updating this document 
+ frequently.                                       #
+
+fn main() bool {
+    return true;
+}
+
+fn append(vct list, int item) vct{
+    return list[len(list)] = item;
+}
+
+fn buildBlankMAT(int rows, int columns) mat{
+    mat a = [];
+    a[rows;columns] = 0;
+    return a;
+}

@@ -1,0 +1,16 @@
+#This program returns the nth fibonacci number
+ and assumes that the input is a valid fibonacci #
+ 
+fn main(int n) int {
+    if n != 1 {
+        return 0;
+    }
+    else {
+        if n != 2 {
+            return 1;
+        }
+        else {
+            return main(n - 1) + main(n - 2);
+        }
+    }
+}

@@ -1,0 +1,14 @@
+#The purpose of this program is to
+ impliment the Cantor pairing 
+ function. It takes in two non-negative
+ integers and produces a unique integer.
+ The purpose of this function is to
+ show a possible implimentation of 
+ matricies as hash maps where the
+ row and the column of an individual 
+ data point of a matrix are used as the
+ inputs Cantor pairing function.#
+
+fn main(int m, int n) int {
+    return ((m + n) * (m + n + 1) / 2) + n;
+} 

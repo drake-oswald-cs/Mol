@@ -1,0 +1,93 @@
+Program : Def;
+
+Def : Function Def;
+
+Function : FN ID OP FormalList CP Type OC Body CC;
+
+FormalList : NEFormal;
+
+NEFormal : Formal NEFormal-Tail;
+
+NEFormal-Tail : CM NEFormal;
+              
+Formal : TYPE Id;
+
+Body : NEBody;
+
+NEBody : Statement SC Body;
+
+Statement : Declaration 
+          | Print
+          | If
+          | Expr
+          | Return;
+   
+Declaration : TYPE ID EQ Expr;
+
+Print : PRINT OP Expr CP;
+
+If : IF Expr OC Body CC ELSE OC Body CC;
+
+Return : RETURN Expr;
+
+Expr : Simple-Expr Expr-Tail;
+
+Simple-Expr : Term Simple-Tail;
+
+Expr-Tail : LT Expr
+          | EE Expr;
+
+Term : Factor Term-Tail;
+
+Simple-Tail : OR Simple-Expr
+            | PL Simple-Expr
+            | MN Simple-Expr;
+
+Term-Tail : AND Term
+          | TM Term
+          | DV Term;
+
+Factor : NG Factor
+       | ID Factor-Tail
+       | Literal
+       | MN  Factor
+       | OP Expr CP;
+
+Factor-Tail : OP Actuals CP
+                | OB Assign CB EQ Expr
+                | EQ Expr;
+
+
+Assign : Expr Assign-Tail;
+
+Assign-Tail : SC Expr;
+                
+Actuals : NEActuals;
+
+NEActuals : Expr NEA-Tail;
+
+NEA-Tail : CM NEActuals;
+          
+Literal : INT
+        | BL
+        | Vector
+        | Matrix;
+
+Vector : OB NumList CB;
+
+NumList : NENumList;
+
+NENumList : Integer NEN-Tail;
+
+NEN-Tail : NENumList;
+
+Matrix : OB VctList CB;
+
+VctList : NEVList;
+              
+NEVList : NumList NEVL-Tail;
+
+NEVL-Tail : SC NEVList;
+ 
+
+
