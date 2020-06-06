@@ -1,2 +1,4 @@
 # Mole
-Mole (Matrix Operation LanguagE
+Mole (Matrix Operation LanguagE)
+
+Implimented in C
