@@ -1,2 +1,0 @@
-APL
-HOPL History of Programming Langauges (proceedings)
