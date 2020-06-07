@@ -1,0 +1,76 @@
+#This file is used to demonstrate vectors
+ and vector operations. Vectors in this 
+ context are simply lists. I am using the
+ term vectors to be constisent with the
+ terminology used in Linear Algebra. When
+ declaring a vector, use the type vct.   #
+
+fn main() vct {
+    
+    vct a = [1 2 3 4 5];
+
+    print(a[0]);
+
+    #Output: 1 ... the value for 
+     index 0, indexing starts at 0.     #
+
+    a[0] = 0;
+
+    print(a);
+
+    #Output: [0 2 3 4 5] ... set for 
+     vectors expect an identifier and
+     two integers where the first integer
+     is the spot and the second integer 
+     is the value to add to that spot.
+     In this way, append is:            #
+
+    a[len(a)] = 6;
+
+    print(a);
+
+    #Output: [0 2 3 4 5 6] ... However,
+     this brings up an interesting
+     problem about selecting an index of
+     arbirary length. I have decided that
+     selecting an index larger than the 
+     length of the vector will fill all 
+     the spots, [len(vct), index) with 
+     zeros, and the final index with the
+     input.                             #
+
+    a[10] = 77;
+
+    print(a);
+
+    #Output: [0 2 3 4 5 6 0 0 0 0 77]   #
+
+    int length = len(a);
+
+    print(length);
+
+    #Output: 10 ... len gets the total
+     number of items in a vector        #
+
+    #Note that there are two that the 
+     only data type that can be int     #
+
+    vct a = [1 2 3 4 5];
+
+    vct b = a * a;
+ 
+    vct c = 2 * a;
+
+    print(b);
+
+    #Output: v1u1 + v2u2 +...+ vnun
+            [1 4 9 16 25]               #
+
+    print(c);
+
+    #Output: cv1 + cv2 +...+ cv2 
+            [2 4 6 8 10];#
+
+    return [1 3 4];
+
+}
