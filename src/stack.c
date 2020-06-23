@@ -22,7 +22,7 @@ void push(struct Node** headRef, Token* data) {
     (*headRef) = pushNode; 
 }
 
-int main(){
+/*int main(){
     Token* top;
     Token* mid;
     Token* fst;
@@ -68,3 +68,4 @@ int main(){
         printf("%s\n", head->data->STRvalue);
     }
 }
+*/
