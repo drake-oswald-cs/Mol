@@ -25,36 +25,28 @@
 
 <NEBody> ::= <Statement> ; <Body>
 
-<Statement> ::= <Declaration> 
-              | <Print>
-              | <If>
+<Statement> ::= <Type> <Identifier> = <Expr>
+              | print( <Expr> )
+              | if <Expr> { <Body> } else { <Body> }
+              | return <Expr>
               | <Expr>
-              | <Return>
-   
-<Declaration> ::= <Type> <Identifier> = <Expr>
-
-<Print> ::= print( <Expr> )
-
-<If> ::= if <Expr> { <Body> } else { <Body> }
-
-<Return> ::= return <Expr>
 
 <Expr> ::= <Simple-Expr> <Expr-Tail>
-
-<Simple-Expr> ::= <Term> <Simple-Tail>
 
 <Expr-Tail> ::= < <Expr>
               | == <Expr>
               | E
 
-<Term> ::= <Factor> <Term-Tail>
+<Simple-Expr> ::= <Term> <Simple-Tail>
 
-<Simple-Tail> ::= or <Simple-Expr>
+<Simple-Tail> ::= - <Simple-Expr>
                 | + <Simple-Expr>
-                | - <Simple-Expr>
                 | E
 
+<Term> ::= <Factor> <Term-Tail>
+
 <Term-Tail> ::= and <Term>
+              | or <Term>
               | * <Term>
               | / <Term>
               | E
@@ -62,11 +54,11 @@
 <Factor> ::= ! <Factor>
            | <Id> <Factor-Tail>
            | <Literal>
-           | -  <Factor>
+           | - <Factor>
            | ( <Expr> )
 
 <Factor-Tail> ::= ( <Actuals> )
-                | [ <Assign> ] <Expr>
+                | [ <Assign> ]
                 | = <Expr>
                 | E
 

@@ -1,0 +1,67 @@
+<Program> -> <Def>
+
+<Def> -> <Function> <Def> | EPSILON
+
+<Function> -> fn <Id> ( <FormalList> ) <Type> { <Body> }
+
+<FormalList> -> EPSILON | <NEFormal>
+
+<NEFormal> -> <Formal> <NEFormal-Tail>
+
+<NEFormal-Tail> -> , <NEFormal> | EPSILON
+
+<Formal> -> <Type> <Id>
+
+<Type> -> int | bol | mat | vct
+
+<Body> -> <NEBody> | EPSILON
+
+<NEBody> -> <Statement> ; <Body>
+
+<Statement> -> <Type> <Id> = <Expr> | print ( <Expr> ) | if <Expr> { <Body> } else { <Body> } | return <Expr> | <Expr>
+
+<Expr> -> <Simple-Expr> <Expr-Tail>
+
+<Expr-Tail> -> < <Expr> | == <Expr> | EPSILON
+
+<Simple-Expr> -> <Term> <Simple-Tail>
+
+<Simple-Tail> -> - <Simple-Expr> | + <Simple-Expr> | EPSILON
+
+<Term> -> <Factor> <Term-Tail>
+
+<Term-Tail> -> and <Term> | or <Term> | * <Term> | / <Term> | EPSILON
+
+<Factor> -> ! <Factor> | <Id> <Factor-Tail> | <Literal> | - <Factor> | ( <Expr> )
+
+<Factor-Tail> -> ( <Actuals> ) | [ <Assign> ] | = <Expr> | EPSILON
+
+<Assign> -> <Expr> <Assign-Tail>
+
+<Assign-Tail> -> ; <Expr> | EPSILON
+                
+<Actuals> -> EPSILON | <NEActuals>
+
+<NEActuals> -> <Expr> <NEA-Tail>
+
+<NEA-Tail> -> , <NEActuals> | EPSILON
+
+<Literal> -> <Integer> | <Boolean> | <Vector> | <Matrix>
+
+<Vector> -> v[ <NumList> ]
+
+<NumList> -> <NENumList> | EPSILON
+
+<NENumList> -> <Integer> <NEN-Tail>
+
+<NEN-Tail> -> <NENumList> | EPSILON
+
+<Matrix> -> [ <VctList> ]
+
+<VctList> -> <NEVList> | EPSILON
+             
+<NEVList> -> <NumList> <NEVL-Tail>
+
+<NEVL-Tail> -> ; <NEVList> | EPSILON
+
+

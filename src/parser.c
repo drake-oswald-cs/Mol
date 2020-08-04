@@ -1,5 +1,10 @@
+#ifndef DEFS_H
+#define DEFS_H
 #include "defs.h"
+#endif
+
 #include "main.h"
+#include "data.h"
 
 void errorHandle(int error, Token peek){
     printf("MOLE Scan Error #%i, Line #%i:\n", error, peek.lineNum);
@@ -24,36 +29,77 @@ void errorHandle(int error, Token peek){
     }
 }
 
+struct Node* pushRule(struct Node* head, EntryType current){
+    Rule currentRule;
+    printStack(head);
+    while(head->data.type != 1){
+        currentRule = parseTable[head->data.datum.nonTerminal][current.datum.terminal.token];
+        if(currentRule.numOfEntries == 0){
+            printf("Syntax Error Line %i, Matched rule [%i][%i] doesn't exist.\n",
+                    current.datum.terminal.lineNum,head->data.datum.nonTerminal, current.datum.terminal.token);
+        }
+        printf("Rule Matched, Top: %i, Current: %i\n",
+                head->data.datum.nonTerminal,  current.datum.terminal.token);
+        if(currentRule.entries[0].type == 3){
+            pop(&head);
+            printStack(head);
+        }
+        else{
+            pop(&head);
+            for(int i = currentRule.numOfEntries - 1; i >= 0; i = i - 1){
+                push(&head, currentRule.entries[i]);
+            }
+            printStack(head);
+        }
+    }
+    return head;
+}
 
-int main(int argc, char *argv[]) {
-    FILE *fp;
+struct Node* handleTerminal(struct Node* head, EntryType current){
+    if(current.datum.terminal.token == head->data.datum.terminal.token){
+        printf("Terminal Matched, top: %i, Current: %i\n",
+                head->data.datum.terminal.token, current.datum.terminal.token);
+        pop(&head);
+    }
+    else{
+        printf("Parse Error; Expected Terminal: %i, Terminal Scanned: %i\n",
+                head->data.datum.terminal.token, current.datum.terminal.token);
+    }
+    printStack(head);
+    return head;
+}
+
+int parse(FILE *fp) {
+    buildTable(parseTable);
     Token top;
     Token peek;
     int error = 0;
- 
-    //Open up the file.
-    if((argv[1][strlen(argv[1])-1] == 'l') &&
-       (argv[1][strlen(argv[1])-2] == 'o') &&
-       (argv[1][strlen(argv[1])-3] == 'm') &&
-       (argv[1][strlen(argv[1])-4] == '.')){
-           fp = fopen(argv[1], "r+");
-    }
-    else{
-        printf("Incorrect file extension\n");
-        return 1;
-    }
-    if(fp == NULL){
-        printf("File %s does not exist\n",argv[1]);
-        return 1;
-    }
 
-    //Initializing token stack and error handling.
+    //Initialize the parsing stack by pushing the ending symbol, $.
+    struct Node* head = NULL;
+    EntryType temp;
+    temp.type = 1;
+    temp.datum.terminal.token = END;
+    temp.datum.terminal.STRvalue = "$";
+    temp.datum.terminal.lineNum = -1;
+    push(&head, temp);
+
+    //Push the first grammar rule onto the stack.
+    temp.type = 0;
+    temp.datum.nonTerminal = PROGRAM;
+    push(&head, temp);
+
+    //Reset temp value for scanning.
+    temp.type = 1;
+
+    //Read the first token and see if it is valid.
     error = scan(fp, &top, 1);
     if(error != 0){
         errorHandle(error, top);
         return 1;
     }
-    if(error == 0 && top.token != 25){
+    if(error == 0 && top.token != 28){
+
         error = scan(fp, &peek, top.lineNum);
     }
     if(error != 0){
@@ -62,8 +108,16 @@ int main(int argc, char *argv[]) {
     }
 
     //Going through the rest of the tokens and error handling.
-    while(error == 0 && peek.token != 25){
-        printf("Enum: %i  Value: %s  Line: %i\n", top.token, top.STRvalue, top.lineNum);
+    while(error == 0 && top.token != 28){
+        temp.datum.terminal = top;
+        //push(&head, temp);
+        while(head->data.type == 0){
+            head = pushRule(head, temp);
+        }
+        if(head->data.type == 1){
+            head = handleTerminal(head, temp);
+        }
+        
         top = peek;
         error = scan(fp, &peek, peek.lineNum);
     }
@@ -71,9 +125,19 @@ int main(int argc, char *argv[]) {
         errorHandle(error, peek);
         return 1;
     }
-    printf("Enum: %i  Value: %s  Line: %i\n", peek.token, peek.STRvalue, top.lineNum);
 
-    //Closing the file ending main.
-    fclose(fp);
-    return 0;
+    temp.datum.terminal = top;
+    while(head->data.type == 0){
+        printStack(head);
+        printf("\n");
+        head = pushRule(head, temp);
+        printStack(head);
+        printf("\n");
     }
+    if(head->data.type == 1){
+        head = handleTerminal(head, temp);
+        printStack(head);
+    }    
+
+    return 0;
+}

@@ -1,4 +1,7 @@
+#ifndef DEFS_H
+#define DEFS_H
 #include "defs.h"
+#endif
 
 void pop(struct Node** headRef) { 
     if (*headRef == NULL) 
@@ -12,7 +15,7 @@ void pop(struct Node** headRef) {
     return; 
 } 
 
-void push(struct Node** headRef, Token* data) { 
+void push(struct Node** headRef, EntryType data) { 
     struct Node* pushNode = (struct Node*)malloc(sizeof(struct Node)); 
   
     pushNode->data = data; 
@@ -22,50 +25,25 @@ void push(struct Node** headRef, Token* data) {
     (*headRef) = pushNode; 
 }
 
-/*int main(){
-    Token* top;
-    Token* mid;
-    Token* fst;
-
-    Token test;
-    Token start;
-    Token next;
-
-    test.token = END;
-    test.STRvalue = "$";
-    test.lineNum = 0;
-    fst = &test;
-
-    start.token = FN;
-    start.STRvalue = "fn";
-    start.lineNum = 1;
-    top = &start;
-
-    next.token = IDENTIFIER;
-    next.STRvalue = "main";
-    next.lineNum = 1;
-    mid = &next;
-
-    struct Node* head = NULL;
-
-    push(&head, fst);
-    push(&head, top);
-    push(&head, mid);
-
-    printf("%s\n", head->data->STRvalue);
-
-    pop(&head);
-
-    printf("%s\n", head->data->STRvalue);
-
-    pop(&head);
-
-    printf("%s\n", head->data->STRvalue);
-
-    pop(&head);
-
-    if(head){
-        printf("%s\n", head->data->STRvalue);
+void printStack(struct Node *node) 
+{
+    if(node == NULL){
+        printf("Stack is empty\n");
     }
-}
-*/
+    while (node != NULL) 
+    { 
+        if(node->data.type == 0){
+            printf("NonTerminal: %i\n", node->data.datum.nonTerminal);
+        }
+        if(node->data.type == 1){
+            printf("Terminal: %i, Value: %s\n",node->data.datum.terminal.token,
+                                        node->data.datum.terminal.STRvalue);
+        }
+        if(node->data.type == 3){
+            printf("You have somehow ended up with an empty Node!\n"
+                   "How curious, this should not be possible!!\n");
+        }
+        node = node->next; 
+    } 
+    printf("\n");
+} 

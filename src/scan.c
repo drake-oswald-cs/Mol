@@ -1,4 +1,7 @@
+#ifndef DEFS_H
+#define DEFS_H
 #include "defs.h"
+#endif
 
 #define MAXSTRING 32
 #define MAXDIGIT 10
@@ -69,6 +72,12 @@ char* scanword(FILE *fp, int current){
 
     ungetc(ch, fp);
 
+    if(i == 1 && current == 118 && ch == '[') {
+        *(str+i) = ch;
+        i++;
+        ch = next_Char(fp);
+    }
+
     if(isalpha(peek_Char(fp))){
         error = 3;
     }
@@ -118,49 +127,55 @@ int scan(FILE *fp, Token *t, int lineNum){
     t->lineNum = lineNum;
 
     if(isdigit(current)){
-        t->token = DIGIT;
+        t->token = INTEGER;
         t->STRvalue = scanint(fp, current);
     }
 
 
     else if(isalpha(current)){
         char* swap = scanword(fp, current);
+        t->token = IDENTIFIER;
+        t->STRvalue = swap;
         if(!strcmp(swap, "and")){
             t->token = AND;
             t->STRvalue = swap;
         }
-        else if(!strcmp(swap, "or")){
+        if(!strcmp(swap, "or")){
             t->token = OR;
             t->STRvalue = swap;
         }
-        else if(!strcmp(swap, "return")){
+        if(!strcmp(swap, "return")){
             t->token = RETURN;
             t->STRvalue = swap;
         }
-        else if(!strcmp(swap, "print")){
+        if(!strcmp(swap, "print")){
             t->token = PRINT;
             t->STRvalue = swap;
         }
-        else if(!strcmp(swap, "fn")){
+        if(!strcmp(swap, "fn")){
             t->token = FN;
             t->STRvalue = swap;
         }
-        else if(!strcmp(swap, "if")){
+        if(!strcmp(swap, "if")){
             t->token = IF;
             t->STRvalue = swap;
         }
-        else if(!strcmp(swap, "else")){
+        if(!strcmp(swap, "else")){
             t->token = ELSE;
             t->STRvalue = swap;
         }
-        else if(!strcmp(swap, "int") || !strcmp(swap, "bol") ||
+        if(!strcmp(swap, "int") || !strcmp(swap, "bol") ||
             !strcmp(swap, "vct") || !strcmp(swap, "mat")){
                 
             t->token = TYPE;
             t->STRvalue = swap;
         }
-        else{
-            t->token = IDENTIFIER;
+        if(!strcmp(swap, "v[")){
+            t->token = VOPENBRAKET;
+            t->STRvalue = swap;
+        }
+        if(!strcmp(swap, "true") || !strcmp(swap, "false")){
+            t->token = BOOLEAN;
             t->STRvalue = swap;
         }
     }
@@ -177,7 +192,7 @@ int scan(FILE *fp, Token *t, int lineNum){
         case '-':
             if isdigit(peek_Char(fp)){
                 t->STRvalue = scanint(fp, current);
-                t->token = DIGIT;
+                t->token = INTEGER;
             }
             else{
                 t->token = MINUS;
@@ -221,9 +236,19 @@ int scan(FILE *fp, Token *t, int lineNum){
             t->STRvalue = ",";
             break;
         case '=':
-            t->token = EQUALS;
-            t->STRvalue = "=";
-            break;
+            if(peek_Char(fp) == '='){
+                t->token = DEQUALS;
+                t->STRvalue = "==";
+                next_Char(fp);
+                break;
+            }
+            else{
+                t->token = EQUALS;
+                t->STRvalue = "=";
+                next_Char(fp);
+                break;
+            }
+    
         case '<':
             t->token = LESS;
             t->STRvalue = "<";
