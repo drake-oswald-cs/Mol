@@ -1,0 +1,7 @@
+# The first type of error is a scanning error. To be exact, the scanning error
+  in this file is when there is an integer that has a greater number of digits
+  in an integer than what is allowed.#
+
+fn main() int{
+  int i = 12345678901;
+}

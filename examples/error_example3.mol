@@ -1,0 +1,6 @@
+# The fourth type of error is a scanning error. This error arrises when there is
+  an undefined token. In this case the undefined token is %.#
+
+fn main() int{
+  a % 1;
+}

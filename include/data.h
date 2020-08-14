@@ -102,8 +102,7 @@ void buildTable(Rule table[32][29]){
     table[BODY][OPENPAREN] = BodOp;
 
     // <Body> -- }
-    temp[0].type = 0;
-    temp[0].datum.nonTerminal = NEBODY;
+    temp[0].type = 3;
     Rule BodCc = {1, {temp[0]}};
     table[BODY][CLOSECURL] = BodCc;
 
@@ -173,6 +172,16 @@ void buildTable(Rule table[32][29]){
     Rule BodVc = {1, {temp[0]}};
     table[BODY][VOPENBRAKET] = BodVc;
 
+    // <NEBody> -- Type
+    temp[0].type = 0;
+    temp[0].datum.nonTerminal = STATEMENT;
+    temp[1].type = 1;
+    temp[1].datum.terminal.token = SEMICOLON;
+    temp[2].type = 0;
+    temp[2].datum.nonTerminal = BODY;
+    Rule NEBTy = {3, {temp[0], temp[1], temp[2]}};
+    table[NEBODY][TYPE] = NEBTy;
+
     // <NEBody> -- (
     temp[0].type = 0;
     temp[0].datum.nonTerminal = STATEMENT;
@@ -206,11 +215,9 @@ void buildTable(Rule table[32][29]){
     // <NEBody> -- if
     temp[0].type = 0;
     temp[0].datum.nonTerminal = STATEMENT;
-    temp[1].type = 1;
-    temp[1].datum.terminal.token = SEMICOLON;
-    temp[2].type = 0;
-    temp[2].datum.nonTerminal = BODY;
-    Rule NEBIf = {3, {temp[0], temp[1], temp[2]}};
+    temp[1].type = 0;
+    temp[1].datum.nonTerminal = BODY;
+    Rule NEBIf = {2, {temp[0], temp[1]}};
     table[NEBODY][IF] = NEBIf;
 
     // <NEBody> -- return
@@ -364,8 +371,8 @@ void buildTable(Rule table[32][29]){
     temp[7].datum.nonTerminal = BODY;
     temp[8].type = 1;
     temp[8].datum.terminal.token = CLOSECURL;
-    Rule StIf = {8, {temp[0], temp[1], temp[2], temp[3],
-                     temp[4], temp[5], temp[6], temp[7]}};
+    Rule StIf = {9, {temp[0], temp[1], temp[2], temp[3],
+                     temp[4], temp[5], temp[6], temp[7], temp[8]}};
     table[STATEMENT][IF] = StIf;
 
     // <Statement> -- return
@@ -430,7 +437,7 @@ void buildTable(Rule table[32][29]){
     temp[1].type = 0;
     temp[1].datum.nonTerminal = EXPRTAIL;
     Rule ExOb = {2, {temp[0], temp[1]}};
-    table[EXPR][OPENPAREN] = ExOb;
+    table[EXPR][OPENBRAKET] = ExOb;
 
     // <EXPR> -- v[
     temp[0].type = 0;
@@ -851,7 +858,7 @@ void buildTable(Rule table[32][29]){
     temp[2].type = 1;
     temp[2].datum.terminal.token = CLOSEBRAKET;
     Rule FaVob = {3, {temp[0], temp[1], temp[2]}};
-    table[FACTOR][OPENBRAKET] = FaVob;
+    table[FACTOR][VOPENBRAKET] = FaVob;
 
     // <Factor-Tail> -- (
     temp[0].type = 1;
@@ -1175,8 +1182,11 @@ void buildTable(Rule table[32][29]){
     table[NENUMLIST][INTEGER] = NenlInt;
 
     // <NENTAIL> -- ;
-    temp[0].type = 3;
-    Rule NentSc = {1, {temp[0]}};
+    temp[0].type = 1;
+    temp[0].datum.terminal.token = SEMICOLON;
+    temp[1].type = 0;
+    temp[1].datum.nonTerminal = NENUMLIST;
+    Rule NentSc = {2, {temp[0], temp[1]}};
     table[NENTAIL][SEMICOLON] = NentSc;
 
     // <NENTAIL> -- ]
@@ -1220,7 +1230,7 @@ void buildTable(Rule table[32][29]){
     temp[0].datum.nonTerminal = NUMLIST;
     temp[1].type = 0;
     temp[1].datum.nonTerminal = NEVLTAIL;
-    Rule NevlInt = {2, {temp[0], temp[2]}};
+    Rule NevlInt = {2, {temp[0], temp[1]}};
     table[NEVLIST][INTEGER] = NevlInt;
 
     // <NEVList> -- ]
@@ -1229,8 +1239,11 @@ void buildTable(Rule table[32][29]){
     table[NEVLIST][CLOSEBRAKET] = NevlCb;
 
     // <NEVLTail> -- ;
-    temp[0].type = 3;
-    Rule NevltSc = {1, {temp[0]}};
+    temp[0].type = 1;
+    temp[0].datum.terminal.token = SEMICOLON;
+    temp[1].type = 0;
+    temp[1].datum.nonTerminal = NEVLTAIL;
+    Rule NevltSc = {2, {temp[0], temp[1]}};
     table[NEVLTAIL][SEMICOLON] = NevltSc;
 
     // <NEVLTail> -- ]

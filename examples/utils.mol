@@ -3,12 +3,16 @@
  sugar. I plan on modifying and updating this document 
  frequently.                                       #
 
-fn main() bool {
+fn main() bol{
     return true;
 }
 
-fn append(vct list, int item) vct{
-    return list[len(list)] = item;
+#Note I have commented out the following functions as they
+ include the error noted in the Readme#
+ 
+#fn append(vct list, int item) vct{
+    list[len(list)] = item;
+    return item;
 }
 
 fn buildBlankMAT(int rows, int columns) mat{
@@ -16,3 +20,4 @@ fn buildBlankMAT(int rows, int columns) mat{
     a[rows;columns] = 0;
     return a;
 }
+#

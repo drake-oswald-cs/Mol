@@ -1,0 +1,3 @@
+# The fifth type of error is a scanning error. This error arrises when there is
+  is a comment that is not closed. There always needs to be two pound signs for
+  a valid comment. This file only has one pound sign, and, thus, is invalid.

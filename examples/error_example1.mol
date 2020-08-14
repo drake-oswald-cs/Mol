@@ -1,0 +1,9 @@
+# The second type of error is a scanning error. To be exact, the scanning error
+  in this file is when there is an integer that has a max number of digits in
+  an integer than what is allowed, but the absolute value of integer exceeds 
+  the maximum size of an integer. This error is different that the error in
+  error_example0 because of how Mol scans and checks digits.#
+
+fn main() int{
+    int i = 5234567890;
+}

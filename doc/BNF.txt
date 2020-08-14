@@ -1,0 +1,103 @@
+<Program> ::= <Def>
+
+<Def> ::= <Function> <Def>
+        | E
+
+<Function> :: = fn <Id> ( <FormalList> ) <Type> { <Body> }
+
+<FormalList> ::= E
+               | <NEFormal>
+
+<NEFormal> ::= <Formal> <NEFormal-Tail>
+
+<NEFormal-Tail> ::= , <NEFormal>
+                  | E
+
+<Formal> ::= <Type> <Id>
+
+<Type> ::= int
+         | bol
+         | mat
+         | vct
+
+<Body> ::= E
+         | <NEBody>
+
+<NEBody> ::= <Statement> ; <Body>
+
+<Statement> ::= <Type> <Identifier> = <Expr>
+              | print( <Expr> )
+              | if <Expr> { <Body> } else { <Body> }
+              | return <Expr>
+              | <Expr>
+
+<Expr> ::= <Simple-Expr> <Expr-Tail>
+
+<Expr-Tail> ::= < <Expr>
+              | == <Expr>
+              | E
+
+<Simple-Expr> ::= <Term> <Simple-Tail>
+
+<Simple-Tail> ::= - <Simple-Expr>
+                | + <Simple-Expr>
+                | E
+
+<Term> ::= <Factor> <Term-Tail>
+
+<Term-Tail> ::= and <Term>
+              | or <Term>
+              | * <Term>
+              | / <Term>
+              | E
+
+<Factor> ::= ! <Factor>
+           | <Id> <Factor-Tail>
+           | <Literal>
+           | - <Factor>
+           | ( <Expr> )
+
+<Factor-Tail> ::= ( <Actuals> )
+                | [ <Assign> ]
+                | = <Expr>
+                | E
+
+<Assign> ::= <Expr> <Assign-Tail>
+
+<Assign-Tail> ::= ; <Expr>
+                | E
+                
+<Actuals> ::= E
+            | <NEActuals>
+
+<NEActuals> ::= <Expr> <NEA-Tail>
+
+<NEA-Tail> ::= , <NEActuals>
+             | E
+
+<Literal> ::= <Integer>
+              <Boolean>
+              <Vector>
+              <Matrix>
+
+<Vector> ::= [ <NumList> ]
+
+<NumList> ::= <NENumList>
+            | E
+
+<NENumList> ::= <Integer> <NEN-Tail>
+
+<NEN-Tail> ::= " " <NENumList>
+             | E
+
+<Matrix> ::= [ <VctList> ]
+
+<VctList> ::= <NEVList>
+            | E
+             
+<NEVList> ::= <NumList> <NEVL-Tail>
+
+<NEVL-Tail> ::= ; <NEVList>
+              | E
+
+

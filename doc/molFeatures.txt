@@ -1,0 +1,170 @@
+The purpose of this file is to establish the language features for Mol. 
+
+Both imperative and functional design paradigms influenced the design of Mol.
+
+To begin I will lay out the basic characteristics of Mol.
+
+The following words are reserved words in Mol: fn, int, bol, vct, mat, if,
+                                               else, print, return, and, or,
+                                               true, false, main.
+
+Quick note on how the keywords were selected: I chose keywords that are quick 
+for me to type. Therefore, some may want bol too have two o's instead of one
+but it is quicker for me to type bol instead of bool. 
+
+Reverved words cannot be used as user-defined identifiers. Furthermore, 
+identifiers must be made up of only upper and lower case letters. Upper case
+and lower case letters are not the same, so the identifiers A and a are 
+different identifiers. There can be no more than 31 characters within an
+identifier.
+
+The reserved word fn is the keyword to identify the start of a function.
+Functions can only defined outside of eachother, meaning the body of a function
+cannot contain another function definition. Furthermore, main is a reserved
+word that specifies a special function in a program. Every Mol program must
+contain one and only one main function. The body of the main function marks the
+where the compiler should begin code generation. A function definition follows
+the format of: fn functionName(Type identifier) Type { Body }. In this formula,
+functionName can be any valid identifier, excluding reserved words, or main.
+After the function name there is a parentheses enclosed list of comma seperated
+type-identifier pairs. This list is the parameter list. Moreover, the list may
+be empty or have as many entries as necessary. Here are three examples of such
+parameter lists: (int x), (), and (int i, vct v, mat m, bol b). After the 
+parameter list is a type keyword that specifies the return type of the 
+function. Finally, there is a curly braces enclosed body to finish of this
+statement. Concerning the standardization of whitespace and curly braces, in 
+Mol it is proper to keep the opening curly brace on the same line as the start
+of the function definition. Note that arguments are passed by value.
+
+The reserved words int, bol, vct, and mat are types that establish the type of
+any given data. These type keywords appear in the return type of function
+definitions and when creating a variable. Mol is strongly typed, so when
+creating a variable the type must be specified first. When creating a variable
+the syntax follows the pattern: type identifier = literal; . Note that in this
+case by literal I am referring to either an expression that evaluates to a
+literal of the same type as the type specified, or an actual literal. The
+following examples are proper ways to create variable:
+
+    int i = 1;
+    int j = i + 2;
+
+    bol t = true;
+    bol f = !t;
+
+    vct va = v[1 2 3 4];
+    vct vb = [va[0] 5];
+
+    mat m = [1 2; 3 4];
+    mat ma = m * 2;
+
+Notes on literals: Integer literals are all signed, and the maximum value of
+                   their absolute value is 2^31 - 1. Currently, if a variable
+                   is assigned an integer of a greater than 2^31 - 1, then the
+                   complier will give and error. Furthermore, if there is an
+                   variable that is intialized under this limit and is 
+                   manipulated so that it exceeds 2^31 - 1, then the value of 
+                   the integer will go -(2^31) + 1 + (the remaining operation).
+                   The reverse holds for a negative numbers, so a negative
+                   number that drops below -(2^31) + 1 will become,
+                   2^31 - 1 - (the remaining operation).
+
+                   Booleans can either be true or false. Casing for these keys 
+                   matter, meaning True and False are identifiers not literals.
+
+                   Vectors start off with the special punctuation of  v[. As of
+                   now this special punctuation is needed to separate vector
+                   literals and matrix operations. The necessity of this
+                   special punctuation is being reviewed as it was originally
+                   necessary to create a deterministic parser. However, the 
+                   rules for creating a matrix literal have recently changed,
+                   so the merits of removing this punctuation is under review
+                   to reduce complexity. A vector literal must be a list of 
+                   zero or more integers separated by spaces ending in a 
+                   closed bracket. 
+
+                   Matrix literals are semicolon separated list of at least one
+                   integer list. The individual integer lists are separated by 
+                   spaces, and brackets enclose the larger semicolon separated
+                   list. Examples: [1 2], [2 3; 3 5; 6 4], [1 2 3 12; 1; 92].
+                   A note about final matrix, all matrices are stored as
+                   square, meaning that in every row there is an equal number
+                   of columns. If a row of a matrix is initialized with less
+                   columns than the row with the greatest number of entries,
+                   then the row with the less columns will be filled with
+                   zeros. Therefore the noted matrix is stored as the matrix:
+                   [1 2 3 12; 1 0 0 0; 92 0 0 0].
+
+In Mol, all if statements follow the form: if Bool-Expr { Body } else { Body }.
+It is important to note that every if statement must have an else. I did this
+so I could avoid the dangling else problem. Furthermore, any Body can be
+completely empty, so if one wishes to effectively not have an else then they
+just need to put: else {}.
+
+A print statement is a primitive identifier that specifies the print function.
+A call to a print statement must its own statement and cannot be contained
+within another statement.
+
+A return marks a special statement. A return statement, once evaluated, marks
+the end of an evaluation of a function. There must be at least one return 
+statement in every function but there may be more. There must be a guarentee
+that there is a return statement, meaning that there either must be a return
+statement outside of an if statement or have return statements on both bodies
+of an if statement that is bound on the first level of the body of the 
+function.
+
+The following are the punctuation used in Mol: = == - + * / ! [ ] ( ) 
+                                               [ ] v[ { } , ; # <
+
+Note that == and = are treated as different punctuation. The purpose of this
+is to differentiate between assignments, =, and the boolean operation, ==.
+
+Comments in Mol are surrounded by #'s. # This is and example comment. # 
+Comments can be any number of lines. 
+
+Functions and operations are evaluated from left to right. 
+
+There are three boolean operations:  ! == <. The only unary boolean operation
+is !, not. So, true and !false are both evaluated as true. Both == and < are
+binary boolean operators. The operation == operates on any type as long as they
+are the same type on both side of the operator. The < operator only works on
+integers. 
+
+Other operators: + - / *. The token - can be used as both an unary operator and
+a binary operator. The unary operator - can operate on integers, vectors, and 
+matrices. This unary operator acts by multiplying a -1 to what it operates on.
+The binary operator -, subtraction, operates on integers, vectors, and matrices
+so long as both operands are of the same type. Note for matrices and vectors
+each operand must be of the same dimensions/length. However, there are 
+additional rules concerning matrices. Subtraction with a vector and a matrix,
+and an integer and matrix are valid if the matrix is not the first operand.
+In the case of an integer and a matrix then the value of the integer is 
+decremented from each  value in the matrix. In the case of a vector and a 
+matrix, the vector must be of the same length as the number columns in the
+matrix. The rules for the binary operation -, subtraction follows for 
+addition, +. While not standard, the above rules also works for division. It is
+important to note that division in this way is not standard. However, I include
+it in Mol because it makes it easier to apply operations to matrices without
+the inclusion of loops. Moreover, as there are only integers, there is only 
+integer division. For multiplication, follow standard matrix, vector, and
+integer/scalar rules. 
+
+Whitespace is significant in lists, such as vector and matrix literals, and
+parameter lists. Furthermore, white space is significant when there are two
+identifiers next to eachother such as in a function definition.
+
+In order to access the values in a vector, there must be the name of the vector
+followed by the index of the value wanted surrounded by brackets. Furthermore,
+to access the data in a matrix, one must give the name of the matrix followed
+by a semicolon seperated pair of integers enclosed by brackets. Similiar syntax
+is used to set a value inside of a vector or matrix. Note that if an index is 
+attempted to be set that is greater than the maximum index, then all values
+between the previous maximum index and the current maximum index will set to 
+zero. For a full example of these see the examples directory. Short examples of these
+are as follows:
+    vct va = v[1 2 3];
+    int i = va[1];
+    va[0] = 0
+
+    mat a = [1 2; 0 3];
+    mat[0;0] = 0;
+    int i = a[1;1];

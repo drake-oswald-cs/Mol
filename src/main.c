@@ -7,6 +7,7 @@
 
 int main(int argc, char *argv[]) {
     FILE *fp;
+    int parseError;
 
     //Open up the file.
     if((argv[1][strlen(argv[1])-1] == 'l') &&
@@ -25,7 +26,11 @@ int main(int argc, char *argv[]) {
     }
 
     //Initializing token stack and error handling.
-    parse(fp);
+    parseError = parse(fp);
+
+    if(parseError == 0){
+        printf("Program, %s, is syntatically valid.\n", argv[1]);
+    }
 
     //Closing the file ending main.
     fclose(fp);

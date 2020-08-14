@@ -1,0 +1,127 @@
+This file is an account of how I, Drake Oswald, went about developing Mol the,
+steps I took towards its development, the design choices that I made, and the
+reasoning behind these choices. 
+
+Originally, I embarked on this project in order to engross myself in language
+design and compiler implimentation. At the start of the project, I wanted to 
+develop a full compiler for Mol. I chose my implimentation language to be C as
+C is a common langauge used in compiler implimentation and I also wanted wanted
+to get better at coding in C. This choice would be a very significant decision
+as my development progress would later be severly hampered by the limitations
+of C and my own inexperience. Furthermore, I had to choose a domain in which 
+to build my langauge around. At the time I was doing some research on hash
+tables. This led me to look more at lists and matricies, and finally led to my
+decisions to focus on Linear Algebra/ matricies. This can be seen in the
+examples directory in the cantor.mol. 
+
+After choosing my implimentation language I began to design my langauge. When
+designing Mol, I decided that, as a primary user, Mol's syntax should be
+tailored towards my preferences. I am a fairly slow typer, so I tried to keep
+reserved words as short as possible while still making sense. This also affects
+the punctuation decisions in Mol. For example, I use the keyword bol instead of
+bool or boolean. Another example is that I do not use commas in separating the
+integers in a vector: [1 2 3 4]. However, when making these critical design
+choices there are many factors to keep in mind.
+
+Such design choices are dependent on the ease of implimentation, historical
+precidence, and ease of use. In the example of the vector, there must be some
+whitespace between entries. Thus, this is a case where whitspace is 
+significant. It is a common debate in langauge design on how significant 
+whitespace should be. This debate can be seen in langauges like python, where
+whitespace is very significant, and java where whitespace is significant only
+in a few cases, such seperating keywords. In Mol, I decided that whitespace
+should only be significant in seperating tokens of the type. Thus, if there are
+two alphabetical tokens or two integers next to eachother, then there must be
+some whitespace between them. In all other cases besides the ones mentioned
+above, there can be any type whitespace between tokens. I decided that there
+can be any type of whitespace in other cases so that anyone can format their
+whitespace in whatever way that suits them.
+
+To allow this, I have included curly braces to mark the boundaries of function
+definitions and if statements. Finally, every other kind of statement must end
+in a semicolon. These two decisions are based on historical precidence. Other 
+programming langauges, such as C and java, use the same syntax. Thus, many 
+programmers, including myself, are used to this syntax and find it intuitive.
+However, I was not fully beholden to all typical syntax features. For example,
+when specifying the return type of a function Mol, the type token comes after
+the arguements list rather than before. Again, I made this decision because it
+is my personal preference to do so. 
+
+The decisions that I made on whitespace were for my ease of use, and for ease
+of implimentation. It is easy to scan tokens in this way when considering that
+identifiers can only contain alphabetical characters, and integers can only 
+contain digits. In this way, any identifiers end whenever there is any token,
+whitespace, or digit is scanned. The same follows for integers.  
+
+The next decision that I made was concerning the typing of Mol, either stongly
+or dynamically typed. I decided that Mol should be strongly typed. As Mol
+focuses upon the matrix operations, and there are differning interactions
+between vectors, scalars, and matricies, I decided that it would be best to 
+make the types explicit. Therefore, the programmer must intend for a matrix to 
+be mulitplied by another matrix, or a scalar by a matrix.
+
+The final design choice that I made was concerning loops. I decided not to
+include loops in Mol. I made this decision because it seemed like too big of
+a feature to implimentation as I had already decided to impliment functions and
+function calls. Thus, the programmer can simply use functions instead of loops. 
+
+With these choices in mind, I designed the syntax of Mol. For further
+clarification on the syntax features see molFeatures.txt. Following the design
+of the syntax, I had to design a grammar to match the syntax design. As I have
+discovered, this process has been very long. Designing the grammar has been
+very long because of the number and complexity of possible statments. The 
+complexity of Mol is much greater than that of Klein, a programming language
+that I have previously created a compiler for. Because of the complexity of
+statements, I have had a multitude of grammar redesigns. One such redesign that
+is currently underway is the necessity of the punctuation of v[.
+
+In my original grammar vector literals and matrix literals fell under different
+grammar rules. Therefore, I had to have different punctuation for each literal
+so that the parsering rules are determanistic. However, I had to redesign the
+grammar for matrix literals. After the redesign, matrix literals and vector
+literals could be recognized by the same grammar rules. This is something that
+I have yet to fix as it would require a signifiant changing in the parsing
+rules. 
+
+But, before I was able to actually start implimenting parsing rules, I had to
+impliment my scanner. When implimenting my scanner, I ran into my first problem
+with learning C and doing this project at the same time. Since the scanner
+reads in the file character by character, I had a hard time actually 
+constructing and storing strings. I would often get segmentation faults as I 
+did not fully understand the C impliment and syntax for strings. Following my
+success in actually constructing proper strings, I wanted these strings to be
+stored as tokens.
+
+Tokens were my first instance of working with structs in this project. I wanted
+all tokens to be handled the same, so whether that be an integer, identifier, 
+or punctuation. Thus, I arrived at handling the data for all tokens as the same
+type. This meant that integers were stored as strings rather than integers.
+Furthermore, I wanted to store the line that the token occurs in so that it 
+would be easier for the users to debug code as they would know the line that
+errors occur in. Knowing what I know now I would have rather implimented the
+token struct to include a union that held different integers or strings so that
+integers would not need to be converted from a string upon code generation.
+
+Upon having a successful scanner, I began work on a parser. The parser included
+a stack that would store different entries, either nonterminal or terminal.
+These entries include a union so that either nonterminals or terminals can be
+handled by the same struct. Figuring out this union and how to work it into my
+code took a significant time.
+
+The final piece that has been completed is a parse table. The parse table is
+implimented by having a 2D array of Rule structs which is itself is a list of
+entry types stored with the number of items in the list. In this way, I can
+look up the rules by knowing what is on top of the stack and what the current 
+token is and then using the enums assosicated with each as positions in the 
+table. 
+
+Throughout this project I have learned much about C including structs, unions,
+and strings. I have also learned a lot about language design, and language
+grammar. Currently, the extent of the compiler is a recognition parser. The 
+next step is to form a full parser, meaning adding semantic actions and forming
+and abstract syntax tree. From there I would need to do semantic analysis and 
+code generation. 
+
+If there was more time I would focus on refining my grammar, then creating 
+semantic actions. Given a lot more time I would like to actually develop a full
+compiler. 

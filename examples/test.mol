@@ -1,1 +1,1 @@
-fn main(int n) int {}
+fn main() int {}

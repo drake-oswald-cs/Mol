@@ -1,0 +1,6 @@
+# The third type of error is a scanning error. This error arrises when there is
+  an identifier that exceeds the max length of identifers of 31 characters.#
+
+fn main() int{
+  int Abcdefghijklmnopqrstuvqxyzaabbcc = 1;
+}

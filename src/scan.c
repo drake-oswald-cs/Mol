@@ -47,7 +47,7 @@ char* scanint(FILE *fp, int current){
         error = 1;
     }
 
-    else if(total >= 4294967296){
+    else if(total >= 214783648){
         error = 2;
     }
 

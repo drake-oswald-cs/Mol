@@ -1,0 +1,9 @@
+# The sixth type of error is a syntax error. This error arrises when there is
+  there is a rule that expects some terminal but the terminal is either not
+  present or absent. This case is a missing semicolon. Note that the syntax
+  errors are not the most informative I would like to change them in the future
+  #
+
+fn main() int{
+  int a = 3
+}
